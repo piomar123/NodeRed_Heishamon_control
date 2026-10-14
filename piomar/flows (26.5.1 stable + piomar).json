@@ -7384,7 +7384,7 @@
             "de7c5c2916599040",
             "b7556729d886d04c",
             "ef67705f79094d57",
-            "68eec511b91d642b"
+            "ac408bed45489544"
         ],
         "x": 1350,
         "y": 2380,
@@ -7751,7 +7751,7 @@
         "y": 2440,
         "wires": [
             [
-                "2919a8530cebf0c2"
+                "ead32d5e2b37349b"
             ]
         ]
     },
@@ -17752,7 +17752,7 @@
         "wires": [
             [
                 "4b0bb57d44bd8bb1",
-                "d8575839988cbbcf"
+                "e4ef7e4a1b80f9a4"
             ]
         ]
     },
@@ -17801,7 +17801,7 @@
         "wires": [
             [
                 "b4d652a4c0313e8a",
-                "624f65770c41504a"
+                "f098ea5e4b1fc2e8"
             ]
         ]
     },
@@ -38223,7 +38223,7 @@
             "523f5df80a888723",
             "6a7fa8b57f2d9800",
             "8627726ba882e493",
-            "5920d576225269e2"
+            "86c0203eb430f582"
         ],
         "x": 1525,
         "y": 3180,
@@ -39604,7 +39604,7 @@
             "05c67c5f7508a04d",
             "2347fd7ebf82b618",
             "523f5df80a888723",
-            "0de68cc467909af6"
+            "1b4f08e2bbd1b538"
         ],
         "x": 1525,
         "y": 3240,
@@ -49209,7 +49209,7 @@
         "z": "a938de76db0b71f6",
         "g": "5a496e1f1ea93a38",
         "name": "T_Zone_2 Input Selector",
-        "func": "\n// ====== Configuration ======\nconst CUSTOM_TIMEOUT_HOURS = 5; // timeout period\nconst CUSTOM_TIMEOUT_MS = CUSTOM_TIMEOUT_HOURS * 60 * 60 * 1000;\n\n// ====== Retrieve Globals ======\nlet T_zone_2_custom = global.get('T_zone_2_custom') || {}; // { value, last_update }\nlet T_zone_2 = global.get('T_zone_2');                      // current temperature\nlet CurrentTime = Date.now();\n\nlet msgLog = {};      // output 2 (logging)\nmsgLog.topic = \"SETUP - Sensors (Zone 2)\";\n\n// ====== Helper function for logging ======\nfunction sendLog(text, color = \"black\") {\n    msgLog.payload = `<font color=${color}>${text}</font>`;\n    node.send([null, msgLog]);\n}\n\nmsg.payload = Number(msg.payload).toFixed(2);\nmsg.payload = parseFloat(msg.payload);\n\n// ====== MESSAGE TYPE 1: Default sensor ======\nif (msg.topic === 'panasonic_heat_pump/main/Second_Room_Thermostat_Temp') {\n\n    // update default sensor value\n    let defaultTemp = parseFloat(msg.payload);\n    if (isNaN(defaultTemp)) return null; // Ignore invalid input\n\n    // Check if custom sensor is active & not expired\n    if (T_zone_2_custom.value !== undefined &&\n        (CurrentTime - T_zone_2_custom.last_update) < CUSTOM_TIMEOUT_MS) {\n\n        // Custom sensor is valid → use it, ignore default\n        //sendLog(\"Custom sensor active, heat pump value ignored.\", \"green\");\n        return null;\n    }\n\n    // Custom sensor missing or expired → use default\n    global.set('T_zone_2', defaultTemp);\n    sendLog(\"Custom sensor lost or absent — fallback to heat pump sensor.\", \"red\");\n\n    return [{ payload: defaultTemp }, null];\n}\n\n// ====== MESSAGE TYPE 2: Custom sensor ======\nif (msg.topic === 'custom_sensor') {\n\n    let customTemp = parseFloat(msg.payload);\n    if (isNaN(customTemp)) return null;\n\n    // update custom sensor globals\n    T_zone_2_custom = {\n        value: customTemp,\n        last_update: CurrentTime\n    };\n    global.set('T_zone_2_custom', T_zone_2_custom);\n    global.set('T_zone_2', customTemp);\n\n    sendLog(\"Custom sensor value received — switching to custom sensor\", \"green\");\n\n    return [{ payload: customTemp }, null];\n}\n\n// ====== Ignore other topics ======\nreturn null;\n",
+        "func": "\n// ====== Configuration ======\nconst CUSTOM_TIMEOUT_HOURS = 5; // timeout period\nconst CUSTOM_TIMEOUT_MS = CUSTOM_TIMEOUT_HOURS * 60 * 60 * 1000;\n\n// ====== Retrieve Globals ======\nlet T_zone_2_custom = global.get('T_zone_2_custom') || {}; // { value, last_update }\nlet T_zone_2 = global.get('T_zone_2');                      // current temperature\nlet CurrentTime = Date.now();\n\nlet msgLog = {};      // output 2 (logging)\nmsgLog.topic = \"SETUP - Sensors (Zone 2)\";\n\n// ====== Helper function for logging ======\nfunction sendLog(text, color = \"black\") {\n    msgLog.payload = `<font color=${color}>${text}</font>`;\n    node.send([null, msgLog]);\n}\n\nmsg.payload = Number(msg.payload).toFixed(2);\nmsg.payload = parseFloat(msg.payload);\n\n// ====== MESSAGE TYPE 1: Default sensor ======\nif (msg.topic === 'panasonic_heat_pump/main/Second_Room_Thermostat_Temp') {\n\n    // update default sensor value\n    let defaultTemp = parseFloat(msg.payload);\n    if (isNaN(defaultTemp)) return null; // Ignore invalid input\n    if (defaultTemp < -100) return null; // piomar: -128 = no second room thermostat\n\n    // Check if custom sensor is active & not expired\n    if (T_zone_2_custom.value !== undefined &&\n        (CurrentTime - T_zone_2_custom.last_update) < CUSTOM_TIMEOUT_MS) {\n\n        // Custom sensor is valid → use it, ignore default\n        //sendLog(\"Custom sensor active, heat pump value ignored.\", \"green\");\n        return null;\n    }\n\n    // Custom sensor missing or expired → use default\n    global.set('T_zone_2', defaultTemp);\n    sendLog(\"Custom sensor lost or absent — fallback to heat pump sensor.\", \"red\");\n\n    return [{ payload: defaultTemp }, null];\n}\n\n// ====== MESSAGE TYPE 2: Custom sensor ======\nif (msg.topic === 'custom_sensor') {\n\n    let customTemp = parseFloat(msg.payload);\n    if (isNaN(customTemp)) return null;\n\n    // update custom sensor globals\n    T_zone_2_custom = {\n        value: customTemp,\n        last_update: CurrentTime\n    };\n    global.set('T_zone_2_custom', T_zone_2_custom);\n    global.set('T_zone_2', customTemp);\n\n    sendLog(\"Custom sensor value received — switching to custom sensor\", \"green\");\n\n    return [{ payload: customTemp }, null];\n}\n\n// ====== Ignore other topics ======\nreturn null;\n",
         "outputs": 2,
         "timeout": "",
         "noerr": 0,
@@ -52005,7 +52005,7 @@
         "y": 1040,
         "wires": [
             [
-                "2ffd2c06246c5561"
+                "3eb024164af5fcc6"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -52855,7 +52855,7 @@
         "y": 1160,
         "wires": [
             [
-                "707c89638b9930ea"
+                "a227f7c8a2d85304"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -53012,7 +53012,7 @@
         "y": 1100,
         "wires": [
             [
-                "ed0b0499aad00e87"
+                "d2575996bfc9acd5"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -53636,7 +53636,7 @@
         "y": 1680,
         "wires": [
             [
-                "f9d3fe3c638698e4"
+                "20860eb07be1dd1e"
             ],
             []
         ]
@@ -90618,11 +90618,11 @@
                 "9dc404968dc9524f"
             ]
         ],
-        "id": "2ffd2c06246c5561",
+        "id": "3eb024164af5fcc6",
         "z": "43c4ee3ee4757f3c",
         "x": 200,
         "y": 2340,
-        "g": "c3a2a66d01d1b3f4"
+        "g": "4b621d1ed50f7c77"
     },
     {
         "type": "function",
@@ -90639,11 +90639,11 @@
                 "fd8bde63ad7a06e0"
             ]
         ],
-        "id": "ed0b0499aad00e87",
+        "id": "d2575996bfc9acd5",
         "z": "43c4ee3ee4757f3c",
         "x": 460,
         "y": 2340,
-        "g": "c3a2a66d01d1b3f4"
+        "g": "4b621d1ed50f7c77"
     },
     {
         "type": "function",
@@ -90661,11 +90661,11 @@
                 "a417c431a7b40824"
             ]
         ],
-        "id": "707c89638b9930ea",
+        "id": "a227f7c8a2d85304",
         "z": "43c4ee3ee4757f3c",
         "x": 720,
         "y": 2340,
-        "g": "c3a2a66d01d1b3f4"
+        "g": "4b621d1ed50f7c77"
     },
     {
         "type": "function",
@@ -90682,11 +90682,11 @@
                 "dece019c79a07993"
             ]
         ],
-        "id": "f9d3fe3c638698e4",
+        "id": "20860eb07be1dd1e",
         "z": "43c4ee3ee4757f3c",
         "x": 980,
         "y": 2340,
-        "g": "c3a2a66d01d1b3f4"
+        "g": "4b621d1ed50f7c77"
     },
     {
         "type": "switch",
@@ -90709,11 +90709,11 @@
                 "12df328367013dd2"
             ]
         ],
-        "id": "2919a8530cebf0c2",
+        "id": "ead32d5e2b37349b",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4560,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "change",
@@ -90739,11 +90739,11 @@
                 "tot": "str"
             }
         ],
-        "id": "6f0d650996fc39d6",
+        "id": "0a19ba157430b871",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4560,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "rbe",
@@ -90757,14 +90757,14 @@
         "topi": "topic",
         "wires": [
             [
-                "6f0d650996fc39d6"
+                "0a19ba157430b871"
             ]
         ],
-        "id": "a2cb1ce39c0e93b7",
+        "id": "0fe9f7f0116302a1",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4560,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "mqtt in",
@@ -90779,14 +90779,14 @@
         "inputs": 0,
         "wires": [
             [
-                "a2cb1ce39c0e93b7"
+                "0fe9f7f0116302a1"
             ]
         ],
-        "id": "0a94e8e370950f56",
+        "id": "8a95bda87f42327b",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4560,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "link out",
@@ -90796,11 +90796,11 @@
             "031e62b0bf3df7d7"
         ],
         "wires": [],
-        "id": "68eec511b91d642b",
+        "id": "ac408bed45489544",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4620,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "change",
@@ -90812,7 +90812,7 @@
         "reg": false,
         "wires": [
             [
-                "68eec511b91d642b"
+                "ac408bed45489544"
             ]
         ],
         "rules": [
@@ -90826,11 +90826,11 @@
                 "tot": "str"
             }
         ],
-        "id": "51d01fdb8203a3ea",
+        "id": "3d00795782ab7918",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4620,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "rbe",
@@ -90844,14 +90844,14 @@
         "topi": "topic",
         "wires": [
             [
-                "51d01fdb8203a3ea"
+                "3d00795782ab7918"
             ]
         ],
-        "id": "843f3b0d23251538",
+        "id": "09911ba438a7202f",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4620,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "mqtt in",
@@ -90866,14 +90866,14 @@
         "inputs": 0,
         "wires": [
             [
-                "843f3b0d23251538"
+                "09911ba438a7202f"
             ]
         ],
-        "id": "1af1f0e9aa7aa7c4",
+        "id": "e2fb74391cc06659",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4620,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "ui_gauge",
@@ -90898,11 +90898,11 @@
         "wires": [],
         "group": "1179fa790d2d89ca",
         "order": 18,
-        "id": "91ac62812dbf4367",
+        "id": "a63581e4b74286ac",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4680,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "ui_gauge",
@@ -90927,11 +90927,11 @@
         "wires": [],
         "group": "1179fa790d2d89ca",
         "order": 19,
-        "id": "d8575839988cbbcf",
+        "id": "e4ef7e4a1b80f9a4",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4680,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "link in",
@@ -90941,14 +90941,14 @@
         ],
         "wires": [
             [
-                "91ac62812dbf4367"
+                "a63581e4b74286ac"
             ]
         ],
-        "id": "5920d576225269e2",
+        "id": "86c0203eb430f582",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4680,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "ui_gauge",
@@ -90973,11 +90973,11 @@
         "wires": [],
         "group": "e3cc96332cd59f07",
         "order": 16,
-        "id": "c66936510feb3d8b",
+        "id": "3879d31dc3e11104",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4680,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "ui_gauge",
@@ -91002,11 +91002,11 @@
         "wires": [],
         "group": "e3cc96332cd59f07",
         "order": 17,
-        "id": "624f65770c41504a",
+        "id": "f098ea5e4b1fc2e8",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4740,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "link in",
@@ -91016,14 +91016,14 @@
         ],
         "wires": [
             [
-                "c66936510feb3d8b"
+                "3879d31dc3e11104"
             ]
         ],
-        "id": "0de68cc467909af6",
+        "id": "1b4f08e2bbd1b538",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4740,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "ui_text",
@@ -91041,11 +91041,11 @@
         "wires": [],
         "group": "bf4af523ba16d457",
         "order": 7,
-        "id": "d209a0eeb20a90fd",
+        "id": "9abc852b889ed240",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4740,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "mqtt in",
@@ -91060,14 +91060,14 @@
         "inputs": 0,
         "wires": [
             [
-                "d209a0eeb20a90fd"
+                "9abc852b889ed240"
             ]
         ],
-        "id": "5e1b55ebb0ca5ae5",
+        "id": "2bd4ec6a64198da3",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4740,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "ui_text",
@@ -91085,11 +91085,11 @@
         "wires": [],
         "group": "bf4af523ba16d457",
         "order": 11,
-        "id": "75807d34aa42ca79",
+        "id": "f15a4864b11f65e8",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4800,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "type": "mqtt in",
@@ -91104,14 +91104,14 @@
         "inputs": 0,
         "wires": [
             [
-                "75807d34aa42ca79"
+                "f15a4864b11f65e8"
             ]
         ],
-        "id": "eb8edf35bb553ba0",
+        "id": "c9614b43a479bfe6",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4800,
-        "g": "861f12977517efac"
+        "g": "0754e81be8635296"
     },
     {
         "id": "9edb394e313b9143",
@@ -91212,7 +91212,7 @@
         }
     },
     {
-        "id": "c3a2a66d01d1b3f4",
+        "id": "4b621d1ed50f7c77",
         "type": "group",
         "z": "43c4ee3ee4757f3c",
         "name": "piomar custom",
@@ -91220,10 +91220,10 @@
             "label": true
         },
         "nodes": [
-            "2ffd2c06246c5561",
-            "ed0b0499aad00e87",
-            "707c89638b9930ea",
-            "f9d3fe3c638698e4"
+            "3eb024164af5fcc6",
+            "d2575996bfc9acd5",
+            "a227f7c8a2d85304",
+            "20860eb07be1dd1e"
         ],
         "x": 34,
         "y": 2300,
@@ -91231,7 +91231,7 @@
         "h": 120
     },
     {
-        "id": "861f12977517efac",
+        "id": "0754e81be8635296",
         "type": "group",
         "z": "8c9d42231fd19d3c",
         "name": "piomar custom",
@@ -91239,24 +91239,24 @@
             "label": true
         },
         "nodes": [
-            "2919a8530cebf0c2",
-            "6f0d650996fc39d6",
-            "a2cb1ce39c0e93b7",
-            "0a94e8e370950f56",
-            "68eec511b91d642b",
-            "51d01fdb8203a3ea",
-            "843f3b0d23251538",
-            "1af1f0e9aa7aa7c4",
-            "91ac62812dbf4367",
-            "d8575839988cbbcf",
-            "5920d576225269e2",
-            "c66936510feb3d8b",
-            "624f65770c41504a",
-            "0de68cc467909af6",
-            "d209a0eeb20a90fd",
-            "5e1b55ebb0ca5ae5",
-            "75807d34aa42ca79",
-            "eb8edf35bb553ba0"
+            "ead32d5e2b37349b",
+            "0a19ba157430b871",
+            "0fe9f7f0116302a1",
+            "8a95bda87f42327b",
+            "ac408bed45489544",
+            "3d00795782ab7918",
+            "09911ba438a7202f",
+            "e2fb74391cc06659",
+            "a63581e4b74286ac",
+            "e4ef7e4a1b80f9a4",
+            "86c0203eb430f582",
+            "3879d31dc3e11104",
+            "f098ea5e4b1fc2e8",
+            "1b4f08e2bbd1b538",
+            "9abc852b889ed240",
+            "2bd4ec6a64198da3",
+            "f15a4864b11f65e8",
+            "c9614b43a479bfe6"
         ],
         "x": 34,
         "y": 4520,

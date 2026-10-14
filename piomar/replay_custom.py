@@ -191,6 +191,16 @@ if old not in rep["func"]:
 rep["func"] = rep["func"].replace(old,
     "if (global.get('war_ot1', \"file\") !== undefined && global.get('F_CCC.z1.ot1', \"file\") === undefined) { // piomar: was F_CCC === undefined (raced with Load on boot)\n    if (global.get('F_CCC', \"file\") === undefined) { global.set('F_CCC',{},\"file\"); }")
 
+# 11. Upstream bug: the active "T_Zone_2 Input Selector" takes TOP118 Second_Room_Thermostat_Temp as
+#     the zone 2 room temperature even when it is -128 (no second room thermostat; GoHeishaMon
+#     publishes TOP118 since 2026-10-14). The older, disabled selector ignored values below -100.
+sel = get("f3d5c028ec98d42f")
+old = "    if (isNaN(defaultTemp)) return null; // Ignore invalid input\n"
+if old not in sel["func"]:
+    sys.exit("zone 2 input selector changed upstream, re-check fix 11")
+sel["func"] = sel["func"].replace(old, old +
+    "    if (defaultTemp < -100) return null; // piomar: -128 = no second room thermostat\n")
+
 # 10. Dashboard theme (ui_base is not part of upstream exports)
 flows.append(live["9edb394e313b9143"])
 
