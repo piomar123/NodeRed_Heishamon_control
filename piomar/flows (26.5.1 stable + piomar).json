@@ -7384,7 +7384,7 @@
             "de7c5c2916599040",
             "b7556729d886d04c",
             "ef67705f79094d57",
-            "7747dc82a4e552d7"
+            "68eec511b91d642b"
         ],
         "x": 1350,
         "y": 2380,
@@ -7751,7 +7751,7 @@
         "y": 2440,
         "wires": [
             [
-                "d3cb37ffcfd3d9d0"
+                "2919a8530cebf0c2"
             ]
         ]
     },
@@ -17752,7 +17752,7 @@
         "wires": [
             [
                 "4b0bb57d44bd8bb1",
-                "b745a029f8bb658e"
+                "d8575839988cbbcf"
             ]
         ]
     },
@@ -17801,7 +17801,7 @@
         "wires": [
             [
                 "b4d652a4c0313e8a",
-                "dd39399c02d5cadf"
+                "624f65770c41504a"
             ]
         ]
     },
@@ -38223,7 +38223,7 @@
             "523f5df80a888723",
             "6a7fa8b57f2d9800",
             "8627726ba882e493",
-            "aa44354923d6601a"
+            "5920d576225269e2"
         ],
         "x": 1525,
         "y": 3180,
@@ -39604,7 +39604,7 @@
             "05c67c5f7508a04d",
             "2347fd7ebf82b618",
             "523f5df80a888723",
-            "7319a97eda9604f2"
+            "0de68cc467909af6"
         ],
         "x": 1525,
         "y": 3240,
@@ -52005,7 +52005,7 @@
         "y": 1040,
         "wires": [
             [
-                "733474a6a809a867"
+                "2ffd2c06246c5561"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -52855,8 +52855,7 @@
         "y": 1160,
         "wires": [
             [
-                "5b68f411defbf165",
-                "a417c431a7b40824"
+                "707c89638b9930ea"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -53013,7 +53012,7 @@
         "y": 1100,
         "wires": [
             [
-                "48ab2f87b9fced1f"
+                "ed0b0499aad00e87"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -53637,7 +53636,7 @@
         "y": 1680,
         "wires": [
             [
-                "dece019c79a07993"
+                "f9d3fe3c638698e4"
             ],
             []
         ]
@@ -90619,11 +90618,11 @@
                 "9dc404968dc9524f"
             ]
         ],
-        "id": "733474a6a809a867",
+        "id": "2ffd2c06246c5561",
         "z": "43c4ee3ee4757f3c",
         "x": 200,
         "y": 2340,
-        "g": "af84c1ce1da2ae1d"
+        "g": "c3a2a66d01d1b3f4"
     },
     {
         "type": "function",
@@ -90640,11 +90639,54 @@
                 "fd8bde63ad7a06e0"
             ]
         ],
-        "id": "48ab2f87b9fced1f",
+        "id": "ed0b0499aad00e87",
         "z": "43c4ee3ee4757f3c",
         "x": 460,
         "y": 2340,
-        "g": "af84c1ce1da2ae1d"
+        "g": "c3a2a66d01d1b3f4"
+    },
+    {
+        "type": "function",
+        "name": "Piomar Block (SetCurves)",
+        "func": "// disable SP manager: don't send heat setpoints\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "5b68f411defbf165",
+                "a417c431a7b40824"
+            ]
+        ],
+        "id": "707c89638b9930ea",
+        "z": "43c4ee3ee4757f3c",
+        "x": 720,
+        "y": 2340,
+        "g": "c3a2a66d01d1b3f4"
+    },
+    {
+        "type": "function",
+        "name": "Piomar setpoint filter",
+        "func": "// piomar: Node-RED must not change heat setpoints or curves\nif (/\\/commands\\/(SetZ[12]HeatRequestTemperature|SetCurves)$/.test(msg.topic)) {\n    const n = (context.get('dropped') || 0) + 1;\n    context.set('dropped', n);\n    node.status({fill: 'red', shape: 'dot', text: `dropped ${n}: ${msg.topic.split('/').pop()}`});\n    return null;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "dece019c79a07993"
+            ]
+        ],
+        "id": "f9d3fe3c638698e4",
+        "z": "43c4ee3ee4757f3c",
+        "x": 980,
+        "y": 2340,
+        "g": "c3a2a66d01d1b3f4"
     },
     {
         "type": "switch",
@@ -90667,11 +90709,11 @@
                 "12df328367013dd2"
             ]
         ],
-        "id": "d3cb37ffcfd3d9d0",
+        "id": "2919a8530cebf0c2",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4560,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "change",
@@ -90697,11 +90739,11 @@
                 "tot": "str"
             }
         ],
-        "id": "1c31e4ce89deac8c",
+        "id": "6f0d650996fc39d6",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4560,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "rbe",
@@ -90715,14 +90757,14 @@
         "topi": "topic",
         "wires": [
             [
-                "1c31e4ce89deac8c"
+                "6f0d650996fc39d6"
             ]
         ],
-        "id": "8992bb027504a0ba",
+        "id": "a2cb1ce39c0e93b7",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4560,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "mqtt in",
@@ -90737,14 +90779,14 @@
         "inputs": 0,
         "wires": [
             [
-                "8992bb027504a0ba"
+                "a2cb1ce39c0e93b7"
             ]
         ],
-        "id": "19c22b8293a9b2dd",
+        "id": "0a94e8e370950f56",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4560,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "link out",
@@ -90754,11 +90796,11 @@
             "031e62b0bf3df7d7"
         ],
         "wires": [],
-        "id": "7747dc82a4e552d7",
+        "id": "68eec511b91d642b",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4620,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "change",
@@ -90770,7 +90812,7 @@
         "reg": false,
         "wires": [
             [
-                "7747dc82a4e552d7"
+                "68eec511b91d642b"
             ]
         ],
         "rules": [
@@ -90784,11 +90826,11 @@
                 "tot": "str"
             }
         ],
-        "id": "d78b8047ac3d6865",
+        "id": "51d01fdb8203a3ea",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4620,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "rbe",
@@ -90802,14 +90844,14 @@
         "topi": "topic",
         "wires": [
             [
-                "d78b8047ac3d6865"
+                "51d01fdb8203a3ea"
             ]
         ],
-        "id": "bc800bc8a299ab43",
+        "id": "843f3b0d23251538",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4620,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "mqtt in",
@@ -90824,14 +90866,14 @@
         "inputs": 0,
         "wires": [
             [
-                "bc800bc8a299ab43"
+                "843f3b0d23251538"
             ]
         ],
-        "id": "813828f0662a028a",
+        "id": "1af1f0e9aa7aa7c4",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4620,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "ui_gauge",
@@ -90856,11 +90898,11 @@
         "wires": [],
         "group": "1179fa790d2d89ca",
         "order": 18,
-        "id": "157e454e86b95120",
+        "id": "91ac62812dbf4367",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4680,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "ui_gauge",
@@ -90885,11 +90927,11 @@
         "wires": [],
         "group": "1179fa790d2d89ca",
         "order": 19,
-        "id": "b745a029f8bb658e",
+        "id": "d8575839988cbbcf",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4680,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "link in",
@@ -90899,14 +90941,14 @@
         ],
         "wires": [
             [
-                "157e454e86b95120"
+                "91ac62812dbf4367"
             ]
         ],
-        "id": "aa44354923d6601a",
+        "id": "5920d576225269e2",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4680,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "ui_gauge",
@@ -90931,11 +90973,11 @@
         "wires": [],
         "group": "e3cc96332cd59f07",
         "order": 16,
-        "id": "3e7f86ba1ce7532b",
+        "id": "c66936510feb3d8b",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4680,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "ui_gauge",
@@ -90960,11 +91002,11 @@
         "wires": [],
         "group": "e3cc96332cd59f07",
         "order": 17,
-        "id": "dd39399c02d5cadf",
+        "id": "624f65770c41504a",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4740,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "link in",
@@ -90974,14 +91016,14 @@
         ],
         "wires": [
             [
-                "3e7f86ba1ce7532b"
+                "c66936510feb3d8b"
             ]
         ],
-        "id": "7319a97eda9604f2",
+        "id": "0de68cc467909af6",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4740,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "ui_text",
@@ -90999,11 +91041,11 @@
         "wires": [],
         "group": "bf4af523ba16d457",
         "order": 7,
-        "id": "ea132250d75b960b",
+        "id": "d209a0eeb20a90fd",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4740,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "mqtt in",
@@ -91018,14 +91060,14 @@
         "inputs": 0,
         "wires": [
             [
-                "ea132250d75b960b"
+                "d209a0eeb20a90fd"
             ]
         ],
-        "id": "a3d384c0df9bc204",
+        "id": "5e1b55ebb0ca5ae5",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4740,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "ui_text",
@@ -91043,11 +91085,11 @@
         "wires": [],
         "group": "bf4af523ba16d457",
         "order": 11,
-        "id": "15ce5332db0a04ee",
+        "id": "75807d34aa42ca79",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4800,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "type": "mqtt in",
@@ -91062,14 +91104,14 @@
         "inputs": 0,
         "wires": [
             [
-                "15ce5332db0a04ee"
+                "75807d34aa42ca79"
             ]
         ],
-        "id": "988fc4e8ca5e0ffc",
+        "id": "eb8edf35bb553ba0",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4800,
-        "g": "faf0a45f9f42900d"
+        "g": "861f12977517efac"
     },
     {
         "id": "9edb394e313b9143",
@@ -91170,7 +91212,7 @@
         }
     },
     {
-        "id": "af84c1ce1da2ae1d",
+        "id": "c3a2a66d01d1b3f4",
         "type": "group",
         "z": "43c4ee3ee4757f3c",
         "name": "piomar custom",
@@ -91178,8 +91220,10 @@
             "label": true
         },
         "nodes": [
-            "733474a6a809a867",
-            "48ab2f87b9fced1f"
+            "2ffd2c06246c5561",
+            "ed0b0499aad00e87",
+            "707c89638b9930ea",
+            "f9d3fe3c638698e4"
         ],
         "x": 34,
         "y": 2300,
@@ -91187,7 +91231,7 @@
         "h": 120
     },
     {
-        "id": "faf0a45f9f42900d",
+        "id": "861f12977517efac",
         "type": "group",
         "z": "8c9d42231fd19d3c",
         "name": "piomar custom",
@@ -91195,24 +91239,24 @@
             "label": true
         },
         "nodes": [
-            "d3cb37ffcfd3d9d0",
-            "1c31e4ce89deac8c",
-            "8992bb027504a0ba",
-            "19c22b8293a9b2dd",
-            "7747dc82a4e552d7",
-            "d78b8047ac3d6865",
-            "bc800bc8a299ab43",
-            "813828f0662a028a",
-            "157e454e86b95120",
-            "b745a029f8bb658e",
-            "aa44354923d6601a",
-            "3e7f86ba1ce7532b",
-            "dd39399c02d5cadf",
-            "7319a97eda9604f2",
-            "ea132250d75b960b",
-            "a3d384c0df9bc204",
-            "15ce5332db0a04ee",
-            "988fc4e8ca5e0ffc"
+            "2919a8530cebf0c2",
+            "6f0d650996fc39d6",
+            "a2cb1ce39c0e93b7",
+            "0a94e8e370950f56",
+            "68eec511b91d642b",
+            "51d01fdb8203a3ea",
+            "843f3b0d23251538",
+            "1af1f0e9aa7aa7c4",
+            "91ac62812dbf4367",
+            "d8575839988cbbcf",
+            "5920d576225269e2",
+            "c66936510feb3d8b",
+            "624f65770c41504a",
+            "0de68cc467909af6",
+            "d209a0eeb20a90fd",
+            "5e1b55ebb0ca5ae5",
+            "75807d34aa42ca79",
+            "eb8edf35bb553ba0"
         ],
         "x": 34,
         "y": 4520,

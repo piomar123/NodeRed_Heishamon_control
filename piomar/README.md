@@ -15,7 +15,8 @@ upstream anchor node is missing; on a new release, check the anchors it complain
 | # | Change | Why |
 |---|--------|-----|
 | 1 | MQTT broker `127.0.0.1` | mosquitto on the Pi |
-| 2 | "Piomar Block" after both SP manager `Block?` nodes | Node-RED never sends `SetZ1/Z2HeatRequestTemperature` (it used to spam identical commands; upstream de-duplicates since 25.x, untested here) |
+| 2 | "Piomar Block" after all three SP manager `Block?` nodes (z1, z2, SetCurves) | Node-RED never sends `SetZ1/Z2HeatRequestTemperature` or `SetCurves` (it used to spam identical commands; upstream de-duplicates since 25.x, untested here). In Compensation Curve mode (this heat pump) 26.x sends the SoftStart/RTC shift as `SetCurves` |
+| 2b | "Piomar setpoint filter" in front of "Dynamic MQTT out", the only command publisher | safety net: drops those three topics from any path; its node status counts the drops |
 | 3 | Force DHW / Force sterilization switches disabled | not used from this dashboard |
 | 4 | `drop LWT` switch on `commands/#` | GoHeishaMon publishes `commands/LWT`; it showed up in the command log and the daily MQTT command counter |
 | 5 | heishamon `Status` and `Internal_Heater_State` changes in the Logs | |

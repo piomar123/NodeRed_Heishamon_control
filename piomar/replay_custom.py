@@ -86,7 +86,10 @@ get(BROKER).update(name="raspberry", broker="127.0.0.1")
 # 2. Stop Node-RED from sending HEAT setpoints (SetZ1/Z2HeatRequestTemperature).
 #    Locally the SP manager spammed identical commands; upstream now de-duplicates in
 #    "Block?", but keep the old behaviour (nothing sent) until tested deliberately.
-for block, comment in (("1b409e1ea72f94dd", "z1"), ("64dcf16c979d2a3a", "z2")):
+#    The third output (SetCurves) carries the shift in Compensation Curve mode, which is the
+#    mode this heat pump runs in; 24.03 sent that shift as SetZ1HeatRequestTemperature.
+for block, comment in (("1b409e1ea72f94dd", "z1"), ("64dcf16c979d2a3a", "z2"),
+                       ("d62a7aa18d066598", "SetCurves")):
     b = get(block)
     target = b["wires"][0]
     pb = add(TAB_MANAGERS, {"type": "function", "name": f"Piomar Block ({comment})",
@@ -94,6 +97,28 @@ for block, comment in (("1b409e1ea72f94dd", "z1"), ("64dcf16c979d2a3a", "z2")):
                             "outputs": 1, "timeout": 0, "noerr": 0, "initialize": "",
                             "finalize": "", "libs": [], "wires": [target]})
     b["wires"][0] = [pb]
+
+# 2b. Safety net in front of the only command publisher ("Dynamic MQTT out"): drop heat
+#     setpoint and curve commands whatever path they come from (SoftStart, RTC, retries,
+#     future upstream paths).
+SETPOINT_FILTER = r"/commands/(SetZ[12]HeatRequestTemperature|SetCurves)$"
+funnel = [n for n in flows if n["type"] == "function" and n.get("wires")
+          and any(N.get(w, {}).get("type") == "mqtt out" and N[w].get("name") == "Dynamic MQTT out"
+                  for w in n["wires"][0])]
+if len(funnel) != 1:
+    sys.exit(f"expected one node feeding 'Dynamic MQTT out', found {len(funnel)}")
+gate = add(TAB_MANAGERS, {"type": "function", "name": "Piomar setpoint filter",
+                          "func": ("// piomar: Node-RED must not change heat setpoints or curves\n"
+                                   f"if (/{SETPOINT_FILTER.replace('/', chr(92) + '/')}/.test(msg.topic)) {{\n"
+                                   "    const n = (context.get('dropped') || 0) + 1;\n"
+                                   "    context.set('dropped', n);\n"
+                                   "    node.status({fill: 'red', shape: 'dot', text: `dropped ${n}: ${msg.topic.split('/').pop()}`});\n"
+                                   "    return null;\n"
+                                   "}\n"
+                                   "return msg;"),
+                          "outputs": 1, "timeout": 0, "noerr": 0, "initialize": "",
+                          "finalize": "", "libs": [], "wires": [funnel[0]["wires"][0]]})
+funnel[0]["wires"][0] = [gate]
 
 # 3. Force DHW / Force sterilization switches disabled (Home + Settings)
 for i in ("c6559a95bb3c55fb", "50bbeaa9a0ad9305", "50b87b6e19d49fae", "ccb9e79ff06190fa"):
