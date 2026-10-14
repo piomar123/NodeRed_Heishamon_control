@@ -201,6 +201,27 @@ if old not in sel["func"]:
 sel["func"] = sel["func"].replace(old, old +
     "    if (defaultTemp < -100) return null; // piomar: -128 = no second room thermostat\n")
 
+# 12. Upstream bug: "Import from Panasonic" (CCC Zone 1/2 import/export) still writes the pre-CCC
+#     names war_ot1..war_wt3, which nothing reads; the CCC function, chart and widgets use
+#     F_CCC.z1.* / F_CCC.z2.*. Write those, and reload the CCC widgets like "Store Zn CCC" does.
+for confirm, zone, reload in (("418e761f03c6c9cd", "z1", "123d7b6352639620"),
+                              ("30ebb223f4c6626c", "z2", "285dd5263c5648c2")):
+    node = get(confirm)
+    if node["func"].count("global.set('war_") != 6:
+        sys.exit(f"CCC {zone} import changed upstream, re-check fix 12")
+    node["func"] = node["func"].replace("global.set('war_", f"global.set('F_CCC.{zone}.")
+    # the curve values arrive by MQTT; right after a restart they can still be missing
+    first_set = node["func"].index(f"        global.set('F_CCC.{zone}.ot1'")
+    Z = zone.upper()
+    node["func"] = (node["func"][:first_set] +
+        f"        if ([{Z}_Heat_Curve_Outside_Low_Temp, {Z}_Heat_Curve_Outside_High_Temp, {Z}_Heat_Curve_Target_Low_Temp, "
+        f"{Z}_Heat_Curve_Target_High_Temp].some(v => v === undefined)) {{ // piomar\n"
+        "            msg.payload = \"No curve from the heat pump yet, try again in 5 minutes\";\n"
+        "            return msg;\n"
+        "        }\n" + node["func"][first_set:])
+    get(reload)
+    node["wires"][0].append(reload)
+
 # 10. Dashboard theme (ui_base is not part of upstream exports)
 flows.append(live["9edb394e313b9143"])
 

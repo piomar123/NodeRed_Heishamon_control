@@ -26,6 +26,7 @@ upstream anchor node is missing; on a new release, check the anchors it complain
 | 9 | Fix of the WAR -> CCC context migration | upstream only migrates when `F_CCC` is undefined, but the "Load on boot" nodes create it first, so the curve (`war_ot*/wt*`) was dropped (tested with a copy of the Pi context) |
 | 10 | Dark theme `ui_base` | not part of upstream exports |
 | 11 | "T_Zone_2 Input Selector" ignores TOP118 below -100 | -128 means no second room thermostat; upstream 26.5.1 used it as the zone 2 room temperature (the older selector had this check) |
+| 12 | "Import from Panasonic" writes `F_CCC.z1/z2.*` and reloads the CCC widgets | upstream still wrote the pre-CCC `war_*` names, so the import changed nothing |
 
 Already upstream (dropped from the replay): `gte 0` on the Chart Energy switches, powerful mode
 logged when `> 0`, wider charts. Dropped as debug leftovers: `node.warn` in "Check operation

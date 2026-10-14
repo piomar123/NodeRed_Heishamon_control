@@ -7384,7 +7384,7 @@
             "de7c5c2916599040",
             "b7556729d886d04c",
             "ef67705f79094d57",
-            "ac408bed45489544"
+            "e4a7c527508bf232"
         ],
         "x": 1350,
         "y": 2380,
@@ -7751,7 +7751,7 @@
         "y": 2440,
         "wires": [
             [
-                "ead32d5e2b37349b"
+                "cd5f7a14736b9d65"
             ]
         ]
     },
@@ -17752,7 +17752,7 @@
         "wires": [
             [
                 "4b0bb57d44bd8bb1",
-                "e4ef7e4a1b80f9a4"
+                "3add98729dc24685"
             ]
         ]
     },
@@ -17801,7 +17801,7 @@
         "wires": [
             [
                 "b4d652a4c0313e8a",
-                "f098ea5e4b1fc2e8"
+                "18dc75d72dfe5060"
             ]
         ]
     },
@@ -38223,7 +38223,7 @@
             "523f5df80a888723",
             "6a7fa8b57f2d9800",
             "8627726ba882e493",
-            "86c0203eb430f582"
+            "168e95ab9561dec0"
         ],
         "x": 1525,
         "y": 3180,
@@ -39604,7 +39604,7 @@
             "05c67c5f7508a04d",
             "2347fd7ebf82b618",
             "523f5df80a888723",
-            "1b4f08e2bbd1b538"
+            "6d82da13e53fb782"
         ],
         "x": 1525,
         "y": 3240,
@@ -40210,7 +40210,7 @@
         "z": "a938de76db0b71f6",
         "g": "1d8b21349d38bc85",
         "name": "Confirm",
-        "func": "\nif (msg.payload == 'Yes') \n    {\n        let msg99={};\n        var Z1_Heat_Curve_Outside_Low_Temp      = global.get('Z1_Heat_Curve_Outside_Low_Temp');\n        var Z1_Heat_Curve_Outside_High_Temp     = global.get('Z1_Heat_Curve_Outside_High_Temp');\n        var Z1_Heat_Curve_Target_Low_Temp       = global.get('Z1_Heat_Curve_Target_Low_Temp');\n        var Z1_Heat_Curve_Target_High_Temp      = global.get('Z1_Heat_Curve_Target_High_Temp');\n        \n        \n        global.set('war_ot1',Z1_Heat_Curve_Outside_High_Temp,\"file\");                 // Outside temperature high         (warm outside)\n        global.set('war_ot2',Z1_Heat_Curve_Outside_Low_Temp,\"file\");                 // Outside temperature intermediate (intermediate outside temperature)\n        global.set('war_ot3',Z1_Heat_Curve_Outside_Low_Temp-1,\"file\");                 // Outside temperature low          (cold outside)\n        \n        global.set('war_wt1',Z1_Heat_Curve_Target_Low_Temp,\"file\");                 // Water temperature low            (cold water)\n        global.set('war_wt2',Z1_Heat_Curve_Target_High_Temp,\"file\");                 // Water temperature intermediate   (intermediate water temperature)\n        global.set('war_wt3',Z1_Heat_Curve_Target_High_Temp,\"file\");\n        \n        \n        \n        msg99.topic = \"SYSTEM\";\n        msg99.payload = \"Import Zone 1 profile from Panasonic heatpump to Node Red\";\n    \n        msg.payload = \"Done\" ;\n        msg.topic = \"\";\n        \n    \n        return msg;\n        \n    }\n",
+        "func": "\nif (msg.payload == 'Yes') \n    {\n        let msg99={};\n        var Z1_Heat_Curve_Outside_Low_Temp      = global.get('Z1_Heat_Curve_Outside_Low_Temp');\n        var Z1_Heat_Curve_Outside_High_Temp     = global.get('Z1_Heat_Curve_Outside_High_Temp');\n        var Z1_Heat_Curve_Target_Low_Temp       = global.get('Z1_Heat_Curve_Target_Low_Temp');\n        var Z1_Heat_Curve_Target_High_Temp      = global.get('Z1_Heat_Curve_Target_High_Temp');\n        \n        \n        if ([Z1_Heat_Curve_Outside_Low_Temp, Z1_Heat_Curve_Outside_High_Temp, Z1_Heat_Curve_Target_Low_Temp, Z1_Heat_Curve_Target_High_Temp].some(v => v === undefined)) { // piomar\n            msg.payload = \"No curve from the heat pump yet, try again in 5 minutes\";\n            return msg;\n        }\n        global.set('F_CCC.z1.ot1',Z1_Heat_Curve_Outside_High_Temp,\"file\");                 // Outside temperature high         (warm outside)\n        global.set('F_CCC.z1.ot2',Z1_Heat_Curve_Outside_Low_Temp,\"file\");                 // Outside temperature intermediate (intermediate outside temperature)\n        global.set('F_CCC.z1.ot3',Z1_Heat_Curve_Outside_Low_Temp-1,\"file\");                 // Outside temperature low          (cold outside)\n        \n        global.set('F_CCC.z1.wt1',Z1_Heat_Curve_Target_Low_Temp,\"file\");                 // Water temperature low            (cold water)\n        global.set('F_CCC.z1.wt2',Z1_Heat_Curve_Target_High_Temp,\"file\");                 // Water temperature intermediate   (intermediate water temperature)\n        global.set('F_CCC.z1.wt3',Z1_Heat_Curve_Target_High_Temp,\"file\");\n        \n        \n        \n        msg99.topic = \"SYSTEM\";\n        msg99.payload = \"Import Zone 1 profile from Panasonic heatpump to Node Red\";\n    \n        msg.payload = \"Done\" ;\n        msg.topic = \"\";\n        \n    \n        return msg;\n        \n    }\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -40221,7 +40221,8 @@
         "y": 5460,
         "wires": [
             [
-                "88e74ca7c5982d24"
+                "88e74ca7c5982d24",
+                "123d7b6352639620"
             ]
         ]
     },
@@ -47920,7 +47921,7 @@
         "z": "a938de76db0b71f6",
         "g": "493fccf0c20ec33e",
         "name": "Confirm",
-        "func": "\nif (msg.payload == 'Yes') \n    {\n        let msg99={};\n        var Z2_Heat_Curve_Outside_Low_Temp      = global.get('Z2_Heat_Curve_Outside_Low_Temp');\n        var Z2_Heat_Curve_Outside_High_Temp     = global.get('Z2_Heat_Curve_Outside_High_Temp');\n        var Z2_Heat_Curve_Target_Low_Temp       = global.get('Z2_Heat_Curve_Target_Low_Temp');\n        var Z2_Heat_Curve_Target_High_Temp      = global.get('Z2_Heat_Curve_Target_High_Temp');\n        \n        \n        global.set('war_ot1',Z2_Heat_Curve_Outside_High_Temp,\"file\");                 // Outside temperature high         (warm outside)\n        global.set('war_ot2',Z2_Heat_Curve_Outside_Low_Temp,\"file\");                 // Outside temperature intermediate (intermediate outside temperature)\n        global.set('war_ot3',Z2_Heat_Curve_Outside_Low_Temp-1,\"file\");                 // Outside temperature low          (cold outside)\n        \n        global.set('war_wt1',Z2_Heat_Curve_Target_Low_Temp,\"file\");                 // Water temperature low            (cold water)\n        global.set('war_wt2',Z2_Heat_Curve_Target_High_Temp,\"file\");                 // Water temperature intermediate   (intermediate water temperature)\n        global.set('war_wt3',Z2_Heat_Curve_Target_High_Temp,\"file\");\n        \n        \n        \n        msg99.topic = \"SYSTEM\";\n        msg99.payload = \"Import Zone 2 profile from Panasonic heatpump to Node Red\";\n    \n        msg.payload = \"Done\" ;\n        msg.topic = \"\";\n        \n    \n        return msg;\n        \n    }\n",
+        "func": "\nif (msg.payload == 'Yes') \n    {\n        let msg99={};\n        var Z2_Heat_Curve_Outside_Low_Temp      = global.get('Z2_Heat_Curve_Outside_Low_Temp');\n        var Z2_Heat_Curve_Outside_High_Temp     = global.get('Z2_Heat_Curve_Outside_High_Temp');\n        var Z2_Heat_Curve_Target_Low_Temp       = global.get('Z2_Heat_Curve_Target_Low_Temp');\n        var Z2_Heat_Curve_Target_High_Temp      = global.get('Z2_Heat_Curve_Target_High_Temp');\n        \n        \n        if ([Z2_Heat_Curve_Outside_Low_Temp, Z2_Heat_Curve_Outside_High_Temp, Z2_Heat_Curve_Target_Low_Temp, Z2_Heat_Curve_Target_High_Temp].some(v => v === undefined)) { // piomar\n            msg.payload = \"No curve from the heat pump yet, try again in 5 minutes\";\n            return msg;\n        }\n        global.set('F_CCC.z2.ot1',Z2_Heat_Curve_Outside_High_Temp,\"file\");                 // Outside temperature high         (warm outside)\n        global.set('F_CCC.z2.ot2',Z2_Heat_Curve_Outside_Low_Temp,\"file\");                 // Outside temperature intermediate (intermediate outside temperature)\n        global.set('F_CCC.z2.ot3',Z2_Heat_Curve_Outside_Low_Temp-1,\"file\");                 // Outside temperature low          (cold outside)\n        \n        global.set('F_CCC.z2.wt1',Z2_Heat_Curve_Target_Low_Temp,\"file\");                 // Water temperature low            (cold water)\n        global.set('F_CCC.z2.wt2',Z2_Heat_Curve_Target_High_Temp,\"file\");                 // Water temperature intermediate   (intermediate water temperature)\n        global.set('F_CCC.z2.wt3',Z2_Heat_Curve_Target_High_Temp,\"file\");\n        \n        \n        \n        msg99.topic = \"SYSTEM\";\n        msg99.payload = \"Import Zone 2 profile from Panasonic heatpump to Node Red\";\n    \n        msg.payload = \"Done\" ;\n        msg.topic = \"\";\n        \n    \n        return msg;\n        \n    }\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -47931,7 +47932,8 @@
         "y": 5840,
         "wires": [
             [
-                "f7a58d8ca6f12678"
+                "f7a58d8ca6f12678",
+                "285dd5263c5648c2"
             ]
         ]
     },
@@ -52005,7 +52007,7 @@
         "y": 1040,
         "wires": [
             [
-                "3eb024164af5fcc6"
+                "dc703e991fda9b21"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -52855,7 +52857,7 @@
         "y": 1160,
         "wires": [
             [
-                "a227f7c8a2d85304"
+                "5fde758091f2a8a5"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -53012,7 +53014,7 @@
         "y": 1100,
         "wires": [
             [
-                "d2575996bfc9acd5"
+                "9fc2b556bf5ddcdd"
             ],
             [
                 "7ddd3f5d8f76897e"
@@ -53636,7 +53638,7 @@
         "y": 1680,
         "wires": [
             [
-                "20860eb07be1dd1e"
+                "83f5cdb75d7cf184"
             ],
             []
         ]
@@ -90618,11 +90620,11 @@
                 "9dc404968dc9524f"
             ]
         ],
-        "id": "3eb024164af5fcc6",
+        "id": "dc703e991fda9b21",
         "z": "43c4ee3ee4757f3c",
         "x": 200,
         "y": 2340,
-        "g": "4b621d1ed50f7c77"
+        "g": "2941749093d9c4b2"
     },
     {
         "type": "function",
@@ -90639,11 +90641,11 @@
                 "fd8bde63ad7a06e0"
             ]
         ],
-        "id": "d2575996bfc9acd5",
+        "id": "9fc2b556bf5ddcdd",
         "z": "43c4ee3ee4757f3c",
         "x": 460,
         "y": 2340,
-        "g": "4b621d1ed50f7c77"
+        "g": "2941749093d9c4b2"
     },
     {
         "type": "function",
@@ -90661,11 +90663,11 @@
                 "a417c431a7b40824"
             ]
         ],
-        "id": "a227f7c8a2d85304",
+        "id": "5fde758091f2a8a5",
         "z": "43c4ee3ee4757f3c",
         "x": 720,
         "y": 2340,
-        "g": "4b621d1ed50f7c77"
+        "g": "2941749093d9c4b2"
     },
     {
         "type": "function",
@@ -90682,11 +90684,11 @@
                 "dece019c79a07993"
             ]
         ],
-        "id": "20860eb07be1dd1e",
+        "id": "83f5cdb75d7cf184",
         "z": "43c4ee3ee4757f3c",
         "x": 980,
         "y": 2340,
-        "g": "4b621d1ed50f7c77"
+        "g": "2941749093d9c4b2"
     },
     {
         "type": "switch",
@@ -90709,11 +90711,11 @@
                 "12df328367013dd2"
             ]
         ],
-        "id": "ead32d5e2b37349b",
+        "id": "cd5f7a14736b9d65",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4560,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "change",
@@ -90739,11 +90741,11 @@
                 "tot": "str"
             }
         ],
-        "id": "0a19ba157430b871",
+        "id": "a367e491b175f4bf",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4560,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "rbe",
@@ -90757,14 +90759,14 @@
         "topi": "topic",
         "wires": [
             [
-                "0a19ba157430b871"
+                "a367e491b175f4bf"
             ]
         ],
-        "id": "0fe9f7f0116302a1",
+        "id": "f7580e82cc416c39",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4560,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "mqtt in",
@@ -90779,14 +90781,14 @@
         "inputs": 0,
         "wires": [
             [
-                "0fe9f7f0116302a1"
+                "f7580e82cc416c39"
             ]
         ],
-        "id": "8a95bda87f42327b",
+        "id": "886c422c3ec8934b",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4560,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "link out",
@@ -90796,11 +90798,11 @@
             "031e62b0bf3df7d7"
         ],
         "wires": [],
-        "id": "ac408bed45489544",
+        "id": "e4a7c527508bf232",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4620,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "change",
@@ -90812,7 +90814,7 @@
         "reg": false,
         "wires": [
             [
-                "ac408bed45489544"
+                "e4a7c527508bf232"
             ]
         ],
         "rules": [
@@ -90826,11 +90828,11 @@
                 "tot": "str"
             }
         ],
-        "id": "3d00795782ab7918",
+        "id": "ec4067538ad027ad",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4620,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "rbe",
@@ -90844,14 +90846,14 @@
         "topi": "topic",
         "wires": [
             [
-                "3d00795782ab7918"
+                "ec4067538ad027ad"
             ]
         ],
-        "id": "09911ba438a7202f",
+        "id": "7f3f9c107e34205f",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4620,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "mqtt in",
@@ -90866,14 +90868,14 @@
         "inputs": 0,
         "wires": [
             [
-                "09911ba438a7202f"
+                "7f3f9c107e34205f"
             ]
         ],
-        "id": "e2fb74391cc06659",
+        "id": "fde8fbe1e40052ea",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4620,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "ui_gauge",
@@ -90898,11 +90900,11 @@
         "wires": [],
         "group": "1179fa790d2d89ca",
         "order": 18,
-        "id": "a63581e4b74286ac",
+        "id": "518d8b52450e7115",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4680,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "ui_gauge",
@@ -90927,11 +90929,11 @@
         "wires": [],
         "group": "1179fa790d2d89ca",
         "order": 19,
-        "id": "e4ef7e4a1b80f9a4",
+        "id": "3add98729dc24685",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4680,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "link in",
@@ -90941,14 +90943,14 @@
         ],
         "wires": [
             [
-                "a63581e4b74286ac"
+                "518d8b52450e7115"
             ]
         ],
-        "id": "86c0203eb430f582",
+        "id": "168e95ab9561dec0",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4680,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "ui_gauge",
@@ -90973,11 +90975,11 @@
         "wires": [],
         "group": "e3cc96332cd59f07",
         "order": 16,
-        "id": "3879d31dc3e11104",
+        "id": "296e1ed14891d5fb",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4680,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "ui_gauge",
@@ -91002,11 +91004,11 @@
         "wires": [],
         "group": "e3cc96332cd59f07",
         "order": 17,
-        "id": "f098ea5e4b1fc2e8",
+        "id": "18dc75d72dfe5060",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4740,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "link in",
@@ -91016,14 +91018,14 @@
         ],
         "wires": [
             [
-                "3879d31dc3e11104"
+                "296e1ed14891d5fb"
             ]
         ],
-        "id": "1b4f08e2bbd1b538",
+        "id": "6d82da13e53fb782",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4740,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "ui_text",
@@ -91041,11 +91043,11 @@
         "wires": [],
         "group": "bf4af523ba16d457",
         "order": 7,
-        "id": "9abc852b889ed240",
+        "id": "325366910d19d1f2",
         "z": "8c9d42231fd19d3c",
         "x": 720,
         "y": 4740,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "mqtt in",
@@ -91060,14 +91062,14 @@
         "inputs": 0,
         "wires": [
             [
-                "9abc852b889ed240"
+                "325366910d19d1f2"
             ]
         ],
-        "id": "2bd4ec6a64198da3",
+        "id": "0186c9fe9cfcde98",
         "z": "8c9d42231fd19d3c",
         "x": 980,
         "y": 4740,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "ui_text",
@@ -91085,11 +91087,11 @@
         "wires": [],
         "group": "bf4af523ba16d457",
         "order": 11,
-        "id": "f15a4864b11f65e8",
+        "id": "e202122b94fd6d7e",
         "z": "8c9d42231fd19d3c",
         "x": 200,
         "y": 4800,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "type": "mqtt in",
@@ -91104,14 +91106,14 @@
         "inputs": 0,
         "wires": [
             [
-                "f15a4864b11f65e8"
+                "e202122b94fd6d7e"
             ]
         ],
-        "id": "c9614b43a479bfe6",
+        "id": "41af5cae64358d88",
         "z": "8c9d42231fd19d3c",
         "x": 460,
         "y": 4800,
-        "g": "0754e81be8635296"
+        "g": "e20bbe9d110fed9f"
     },
     {
         "id": "9edb394e313b9143",
@@ -91212,7 +91214,7 @@
         }
     },
     {
-        "id": "4b621d1ed50f7c77",
+        "id": "2941749093d9c4b2",
         "type": "group",
         "z": "43c4ee3ee4757f3c",
         "name": "piomar custom",
@@ -91220,10 +91222,10 @@
             "label": true
         },
         "nodes": [
-            "3eb024164af5fcc6",
-            "d2575996bfc9acd5",
-            "a227f7c8a2d85304",
-            "20860eb07be1dd1e"
+            "dc703e991fda9b21",
+            "9fc2b556bf5ddcdd",
+            "5fde758091f2a8a5",
+            "83f5cdb75d7cf184"
         ],
         "x": 34,
         "y": 2300,
@@ -91231,7 +91233,7 @@
         "h": 120
     },
     {
-        "id": "0754e81be8635296",
+        "id": "e20bbe9d110fed9f",
         "type": "group",
         "z": "8c9d42231fd19d3c",
         "name": "piomar custom",
@@ -91239,24 +91241,24 @@
             "label": true
         },
         "nodes": [
-            "ead32d5e2b37349b",
-            "0a19ba157430b871",
-            "0fe9f7f0116302a1",
-            "8a95bda87f42327b",
-            "ac408bed45489544",
-            "3d00795782ab7918",
-            "09911ba438a7202f",
-            "e2fb74391cc06659",
-            "a63581e4b74286ac",
-            "e4ef7e4a1b80f9a4",
-            "86c0203eb430f582",
-            "3879d31dc3e11104",
-            "f098ea5e4b1fc2e8",
-            "1b4f08e2bbd1b538",
-            "9abc852b889ed240",
-            "2bd4ec6a64198da3",
-            "f15a4864b11f65e8",
-            "c9614b43a479bfe6"
+            "cd5f7a14736b9d65",
+            "a367e491b175f4bf",
+            "f7580e82cc416c39",
+            "886c422c3ec8934b",
+            "e4a7c527508bf232",
+            "ec4067538ad027ad",
+            "7f3f9c107e34205f",
+            "fde8fbe1e40052ea",
+            "518d8b52450e7115",
+            "3add98729dc24685",
+            "168e95ab9561dec0",
+            "296e1ed14891d5fb",
+            "18dc75d72dfe5060",
+            "6d82da13e53fb782",
+            "325366910d19d1f2",
+            "0186c9fe9cfcde98",
+            "e202122b94fd6d7e",
+            "41af5cae64358d88"
         ],
         "x": 34,
         "y": 4520,
